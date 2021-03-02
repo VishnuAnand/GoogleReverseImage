@@ -4,7 +4,7 @@ from bs4 import BeautifulSoup
 
 # url = ('https://www.google.com/searchbyimage?image_url=https://filedn.com/ltOdFv1aqz1YIFhf4gTY8D7/ingus-info/BLOGS/Photography-stocks3/stock-photography-slider.jpg&encoded_image=&image_content=&filename=&hl=en-IN')
 http = urllib3.PoolManager()
-r = http.request('GET', 'https://www.google.com/searchbyimage?image_url=https://filedn.com/ltOdFv1aqz1YIFhf4gTY8D7/ingus-info/BLOGS/Photography-stocks3/stock-photography-slider.jpg&encoded_image=&image_content=&filename=&hl=en-IN')
+# r = http.request('GET', 'https://www.google.com/searchbyimage?image_url=https://filedn.com/ltOdFv1aqz1YIFhf4gTY8D7/ingus-info/BLOGS/Photography-stocks3/stock-photography-slider.jpg&encoded_image=&image_content=&filename=&hl=en-IN')
 # request = urllib3.Request(url, None, {})
 # response = urllib3.urlopen(request)
 # print(r.headers)
@@ -23,6 +23,10 @@ from bs4 import BeautifulSoup
 if python3:
     import certifi
 import requests
+
+# soup=BeautifulSoup("/search?hl=en-IN&amp;tbs=simg:CAQSiQIJIzJtcCAQEcQa_1QELELCMpwgaOQo3CAQSE5M9AJktkS2qE8wMhwaZLLoY_1hwaGjGjNvet3EM5-Evrnx2Z_1O56xfj6SSUrwlbZIAUwBAwLEI6u_1ggaCgoICAESBOvlKNsMCxCd7cEJGp4BCh4KC25vcm1hbCBsZW5z2qWI9gMLCgkvbS8wMTd4dHIKIgoOdGVsZWNvbXByZXNzb3LapYj2AwwKCi9tLzAzcWYxNHYKGAoFY2Fub27apYj2AwsKCS9tLzAxYnZ4MQobCghraXQgbGVuc9qliPYDCwoJL20vMDdkY3JxCiEKDnRlbGVwaG90byBsZW5z2qWI9gMLCgkvbS8wMWJ0NHcM&amp;q=best+photographer&amp;tbm=isch&amp;sa=X&amp;ved=2ahUKEwi3vc2Qv5HvAhXLUt4KHXqiB8sQ2A4oAXoECBAQMQ","html.parser")
+# print(soup.prettify(formatter=None))
+
 
 url = 'https://www.google.com/searchbyimage?image_url=https://filedn.com/ltOdFv1aqz1YIFhf4gTY8D7/ingus-info/BLOGS/Photography-stocks3/stock-photography-slider.jpg&encoded_image=&image_content=&filename=&hl=en-IN'
 headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36','referer': 'https://www.google.com/','origin': 'https://www.google.com/'}
@@ -53,6 +57,7 @@ def doImageSearch(full_url):
     conn.setopt(conn.WRITEFUNCTION, returned_code.write)
     conn.perform()
     conn.close()
+    
     if python3:
         return returned_code.getvalue().decode('UTF-8')
     else:
@@ -97,24 +102,35 @@ def parseResults(code, resized=False):
 
     return json.dumps(results)
 
-code = doImageSearch('https://www.google.com/searchbyimage?image_url=https://filedn.com/ltOdFv1aqz1YIFhf4gTY8D7/ingus-info/BLOGS/Photography-stocks3/stock-photography-slider.jpg&encoded_image=&image_content=&filename=&hl=en-IN')
+from urllib.parse import quote_plus
+# img="https://filedn.com/ltOdFv1aqz1YIFhf4gTY8D7/ingus-info/BLOGS/Photography-stocks3/stock-photography-slider.jpg"
+imgUrl="https://media-exp1.licdn.com/dms/image/C4D0BAQFCrCc_Mtq6YQ/company-logo_200_200/0/1519952271098?e=2159024400&v=beta&t=bZtDouIbGugYnfpi4McBbjvm0ysQ0wQQjn6YTwKDoxU"
+# parsedUrl= BeautifulSoup(imgUrl, 'html.parser')
+
+# Parsing the URL as encoded, otherwise main URL will be affected
+parsedUrl=quote_plus(imgUrl)
+print(parsedUrl)
+
+code = doImageSearch('https://www.google.com/searchbyimage?image_url='+parsedUrl+'&encoded_image=&image_content=&filename=&hl=en-IN')
 # print(parseResults(code))
-f = open("response.html", "a",encoding='utf-8')
-f.write(code)
-f.close()
+# f = open("response.html", "a",encoding='utf-8')
+# f.write(code)
+# f.close()
 
 # coding=utf8
 # the above tag defines encoding for this document and is for Python 2.x compatibility
 
 import re
 
-regex = r"(?:href=\")(.+)(?:\">All\s+sizes)"
-
-test_str = code
-
-matches = re.finditer(regex, test_str, re.MULTILINE)
-print(matches[0])
-
+matchObj = re.search(r'(?:Find other sizes of this image:)(?:.+\s+)(?:href=\")(.+)(?:\">All\s+sizes)', code, re.M)
+#print(matchObj)
+if matchObj:
+    # print ("matchObj.group() : ", str(BeautifulSoup(matchObj.group(), 'html.parser')))
+    print ("matchObj.group(1) : ", "https://www.google.com"+BeautifulSoup(matchObj.group(1), 'html.parser').prettify(formatter=None))
+    import webbrowser
+    webbrowser.open("https://www.google.com"+BeautifulSoup(matchObj.group(1), 'html.parser').prettify(formatter=None), new=2)
+else:
+    print("None")
 # for matchNum, match in enumerate(matches, start=1):
     
 #     print ("Match {matchNum} was found at {start}-{end}: {match}".format(matchNum = matchNum, start = match.start(), end = match.end(), match = match.group()))
@@ -125,3 +141,4 @@ print(matches[0])
 #         print ("Group {groupNum} found at {start}-{end}: {group}".format(groupNum = groupNum, start = match.start(groupNum), end = match.end(groupNum), group = match.group(groupNum)))
 
 # Note: for Python 2.7 compatibility, use ur"" to prefix the regex and u"" to prefix the test string and substitution.
+
