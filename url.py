@@ -1,14 +1,4 @@
-import urllib3
 import json
-from bs4 import BeautifulSoup
-
-# url = ('https://www.google.com/searchbyimage?image_url=https://filedn.com/ltOdFv1aqz1YIFhf4gTY8D7/ingus-info/BLOGS/Photography-stocks3/stock-photography-slider.jpg&encoded_image=&image_content=&filename=&hl=en-IN')
-http = urllib3.PoolManager()
-# r = http.request('GET', 'https://www.google.com/searchbyimage?image_url=https://filedn.com/ltOdFv1aqz1YIFhf4gTY8D7/ingus-info/BLOGS/Photography-stocks3/stock-photography-slider.jpg&encoded_image=&image_content=&filename=&hl=en-IN')
-# request = urllib3.Request(url, None, {})
-# response = urllib3.urlopen(request)
-# print(r.headers)
-# print(r.status)
 
 import pycurl
 from flask import Flask, url_for, jsonify, request
@@ -28,10 +18,10 @@ import requests
 # print(soup.prettify(formatter=None))
 
 
-url = 'https://www.google.com/searchbyimage?image_url=https://filedn.com/ltOdFv1aqz1YIFhf4gTY8D7/ingus-info/BLOGS/Photography-stocks3/stock-photography-slider.jpg&encoded_image=&image_content=&filename=&hl=en-IN'
-headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36','referer': 'https://www.google.com/','origin': 'https://www.google.com/'}
+# url = 'https://www.google.com/searchbyimage?image_url=https://filedn.com/ltOdFv1aqz1YIFhf4gTY8D7/ingus-info/BLOGS/Photography-stocks3/stock-photography-slider.jpg&encoded_image=&image_content=&filename=&hl=en-IN'
+# headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36','referer': 'https://www.google.com/','origin': 'https://www.google.com/'}
 
-response = requests.get(url, headers=headers)
+# response = requests.get(url, headers=headers)
 # print(response.text)
 # print(response.headers)
 
@@ -103,8 +93,8 @@ def parseResults(code, resized=False):
     return json.dumps(results)
 
 from urllib.parse import quote_plus
-# img="https://filedn.com/ltOdFv1aqz1YIFhf4gTY8D7/ingus-info/BLOGS/Photography-stocks3/stock-photography-slider.jpg"
-imgUrl="https://media-exp1.licdn.com/dms/image/C4D0BAQFCrCc_Mtq6YQ/company-logo_200_200/0/1519952271098?e=2159024400&v=beta&t=bZtDouIbGugYnfpi4McBbjvm0ysQ0wQQjn6YTwKDoxU"
+imgUrl="https://filedn.com/ltOdFv1aqz1YIFhf4gTY8D7/ingus-info/BLOGS/Photography-stocks3/stock-photography-slider.jpg"
+# imgUrl="https://media-exp1.licdn.com/dms/image/C4D0BAQFCrCc_Mtq6YQ/company-logo_200_200/0/1519952271098?e=2159024400&v=beta&t=bZtDouIbGugYnfpi4McBbjvm0ysQ0wQQjn6YTwKDoxU"
 # parsedUrl= BeautifulSoup(imgUrl, 'html.parser')
 
 # Parsing the URL as encoded, otherwise main URL will be affected
